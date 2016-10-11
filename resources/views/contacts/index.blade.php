@@ -38,7 +38,7 @@
 
     <div class="text-center">
         <nav>
-            {!! $contacts->links() !!}
+            {!! $contacts->appends(Request::query())->render() !!}
         </nav>
     </div>
 @endsection

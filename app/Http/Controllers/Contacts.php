@@ -13,9 +13,13 @@ class Contacts extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::paginate(10);
+        if($group_id = ($request->get('group_id'))) {
+            $contacts = Contact::where('group_id', $group_id)->paginate(4);
+        }else {
+            $contacts = Contact::paginate(4);
+        }
 
         return view('contacts.index', compact('contacts'));
     }
