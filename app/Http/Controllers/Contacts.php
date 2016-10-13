@@ -9,13 +9,13 @@ use Illuminate\Http\Request;
 class Contacts extends Controller
 {
     private $limit = 5;
+    private $upload_dir = 'public/uploads';
     private $rules = [
         'name'    => ['required', 'min:5'],
         'company' => ['required'],
         'email'   => ['required', 'email'],
         'photo'   => ['mimes:jpg,jpeg,png,gif,bmp'],
     ];
-    private $upload_dir = 'public/uploads';
 
     public function __construct()
     {
@@ -24,11 +24,22 @@ class Contacts extends Controller
 
     public function index(Request $request)
     {
-        if ($group_id = ($request->get('group_id'))) {
-            $contacts = Contact::where('group_id', $group_id)->orderBy('id', 'desc')->paginate($this->limit);
-        } else {
-            $contacts = Contact::orderBy('id', 'desc')->paginate($this->limit);
-        }
+        $contacts = Contact::where(function ($query) use ($request) {
+            //$query->where("user_id", $request->user()->id);
+
+            if ($group_id = ($request->get('group_id'))) {
+                $query->where('group_id', $group_id);
+            }
+
+            if (($term = $request->get("term"))) {
+                $keywords = '%' . $term . '%';
+                $query->orWhere("name", 'LIKE', $keywords);
+                $query->orWhere("company", 'LIKE', $keywords);
+                $query->orWhere("email", 'LIKE', $keywords);
+            }
+        })
+            ->orderBy('id', 'desc')
+            ->paginate($this->limit);
 
         return view('contacts.index', compact('contacts'));
     }
@@ -87,6 +98,23 @@ class Contacts extends Controller
         $this->removePhoto($contact->photo);
 
         return redirect('contacts')->with('message', 'Contact Deleted!');
+    }
+
+    public function autocomplete(Request $request)
+    {
+        if ($request->ajax()) {
+            return Contact::select(['id', 'name as value'])->where(function ($query) use ($request) {
+                if (($term = $request->get("term"))) {
+                    $keywords = '%' . $term . '%';
+                    $query->orWhere("name", 'LIKE', $keywords);
+                    $query->orWhere("company", 'LIKE', $keywords);
+                    $query->orWhere("email", 'LIKE', $keywords);
+                }
+            })
+                ->orderBy('name', 'asc')
+                ->take(5)
+                ->get();
+        }
     }
 
     private function getRequest($request)

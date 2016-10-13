@@ -28,7 +28,7 @@
                                 <a href="{{ route("contacts.edit", ['id' => $contact->id]) }}" class="btn btn-circle btn-default btn-xs" title="Edit">
                                     <i class="glyphicon glyphicon-edit"></i>
                                 </a>
-                                <button onclick="return confirm('Are you sure?');" type="submit" class="btn btn-circle btn-danger btn-xs" title="Edit">
+                                <button onclick="return confirm('Are you sure?');" type="submit" class="btn btn-circle btn-danger btn-xs" title="Delete">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </button>
                             {!! Form::close() !!}

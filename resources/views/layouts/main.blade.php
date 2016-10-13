@@ -11,6 +11,7 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
     <link href="/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <link href="/jquery-ui/jquery-ui.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,6 +42,17 @@
                     <i class="glyphicon glyphicon-plus"></i>Add Contact
                 </a>
             </div>
+            <form action="{{ route("contacts.index") }}" class="navbar-form navbar-right" role="search">
+                <div class="input-group">
+                    <input type="text" name="term" value="{{ Request::get("term") }}" class="form-control"
+                           placeholder="Search..."/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
         </div>
     </div>
 </nav>
@@ -52,10 +64,14 @@
             <div class="list-group">
 
                 <?php $selected_group = Request::get('group_id') ?>
-                <a href="{{ route('contacts.index') }}" class="list-group-item {{ empty($selected_group) ? 'active' : '' }}">All Contact <span class="badge">{{ App\Contact::count() }}</span></a>
+                <a href="{{ route('contacts.index') }}"
+                   class="list-group-item {{ empty($selected_group) ? 'active' : '' }}">All Contact <span
+                            class="badge">{{ App\Contact::count() }}</span></a>
 
                 @foreach(App\Group::all() as $group)
-                    <a href="{{ route('contacts.index', ['group_id' => $group->id]) }}" class="list-group-item {{ $selected_group == $group->id ? 'active' : '' }}">{{ $group->name }} <span class="badge">{{ $group->contacts->count() }}</span></a>
+                    <a href="{{ route('contacts.index', ['group_id' => $group->id]) }}"
+                       class="list-group-item {{ $selected_group == $group->id ? 'active' : '' }}">{{ $group->name }}
+                        <span class="badge">{{ $group->contacts->count() }}</span></a>
                 @endforeach
             </div>
         </div><!-- /.col-md-3 -->
@@ -77,5 +93,20 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jasny-bootstrap.min.js"></script>
+<script src="/jquery-ui/jquery-ui.min.js"></script>
+<script>
+    $(function () {
+        $("input[name=term]").autocomplete({
+            source: "{{ route("contacts.autocomplete") }}",
+            minLength: 3,
+            select: function (event, ui) {
+                $(this).val(ui.item.value);
+            }
+        });
+    });
+</script>
+
+@yield('form-script')
+
 </body>
 </html>

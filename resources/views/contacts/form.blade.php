@@ -76,7 +76,8 @@
                         <?php $photo = !empty($contact->photo) ? $contact->photo : 'default.png' ?>
                         {!! Html::image('uploads/' . $photo, "Choose photo", ['width' => 150, 'height' => 150]) !!}
                     </div>
-                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+                    <div class="fileinput-preview fileinput-exists thumbnail"
+                         style="max-width: 200px; max-height: 150px;"></div>
                     <div class="text-center">
                         <span class="btn btn-default btn-file"><span class="fileinput-new">Choose Photo</span>
                         <span class="fileinput-exists">Change</span>{!! Form::file('photo') !!}</span>
@@ -93,10 +94,64 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-offset-3 col-md-6">
-                    <button type="submit" class="btn btn-primary">{{ ! empty($contact->id) ? "Update" : "Save"}}</button>
+                    <button type="submit"
+                            class="btn btn-primary">{{ ! empty($contact->id) ? "Update" : "Save"}}</button>
                     <a href="#" class="btn btn-default">Cancel</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section('form-script')
+    <script>
+        $("#add-new-group").hide();
+        $('#add-group-btn').click(function () {
+            $("#add-new-group").slideToggle(function () {
+                $('#new_group').focus();
+            });
+            return false;
+        });
+
+        $("#add-new-btn").click(function () {
+            var newGroup = $("#new_group");
+            var inputGroup = newGroup.closest('.input-group');
+
+            $.ajax({
+                url: "{{ route("groups.store") }}",
+                method: 'post',
+                data: {
+                    name: $("#new_group").val(),
+                    _token: $("input[name=_token]").val()
+                },
+                success: function (group) {
+                    if (group.id != null) {
+                        inputGroup.removeClass('has-error');
+                        inputGroup.next('.text-danger').remove();
+
+                        var newOption = $('<option></option>')
+                                .attr('value', group.id)
+                                .attr('selected', true)
+                                .text(group.name);
+
+                        $("select[name=group_id]")
+                                .append(newOption);
+
+                        newGroup.val("");
+                    }
+                },
+                error: function (xhr) {
+                    var errors = xhr.responseJSON;
+                    var error = errors.name[0];
+                    if (error) {
+
+                        inputGroup.next('.text-danger').remove();
+                        inputGroup
+                                .addClass('has-error')
+                                .after('<p class="text-danger">' + error + '</p>');
+                    }
+                }
+            });
+        });
+    </script>
+@endsection
