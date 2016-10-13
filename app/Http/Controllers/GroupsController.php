@@ -6,7 +6,7 @@ use App\Group;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
-class Groups extends Controller
+class GroupsController extends Controller
 {
     public function store(Request $request)
     {
@@ -14,9 +14,7 @@ class Groups extends Controller
             'name' => 'required|unique:groups'
         ]);
 
-        Group::create($request->all());
-
-        //return redirect('contacts')->with('message', 'Contact Saved!');
+        return Group::create($request->all());
     }
 
 }

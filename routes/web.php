@@ -11,9 +11,13 @@
 |
 */
 
-Route::get('/', 'Contacts@index');
+Route::get('/', 'ContactsController@index');
 
-Route::post('groups/store', ['uses' => 'Groups@store', 'as' => 'groups.store']);
-Route::get('contacts/autocomplete', ['uses' => 'Contacts@autocomplete', 'as' => 'contacts.autocomplete']);
+Route::post('groups/store', ['uses' => 'GroupsController@store', 'as' => 'groups.store']);
+Route::get('contacts/autocomplete', ['uses' => 'ContactsController@autocomplete', 'as' => 'contacts.autocomplete']);
 
-Route::resource('contacts', 'Contacts');
+Route::resource('contacts', 'ContactsController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');

@@ -6,7 +6,7 @@ use App\Contact;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
-class Contacts extends Controller
+class ContactsController extends Controller
 {
     private $limit = 5;
     private $upload_dir = 'public/uploads';
