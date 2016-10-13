@@ -10,6 +10,7 @@
     <!-- Bootstrap -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
+    <link href="/css/jasny-bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -31,16 +32,13 @@
                 <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand text-uppercase" href="#">
-                My contact
-            </a>
+            <a class="navbar-brand text-uppercase" href="#">My contact</a>
         </div>
         <!-- /.navbar-header -->
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <div class="nav navbar-right navbar-btn">
-                <a href="form.html" class="btn btn-default">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    Add Contact
+                <a href="{{ route("contacts.create") }}" class="btn btn-default">
+                    <i class="glyphicon glyphicon-plus"></i>Add Contact
                 </a>
             </div>
         </div>
@@ -63,6 +61,12 @@
         </div><!-- /.col-md-3 -->
 
         <div class="col-md-9">
+            @if(session('message'))
+                <div class="alert alert-success">
+                    {{ session('message') }}
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </div>
@@ -72,5 +76,6 @@
 <script src="/js/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/js/bootstrap.min.js"></script>
+<script src="/js/jasny-bootstrap.min.js"></script>
 </body>
 </html>

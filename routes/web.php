@@ -11,8 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'Contacts@index');
 
 Route::resource('contacts', 'Contacts');
