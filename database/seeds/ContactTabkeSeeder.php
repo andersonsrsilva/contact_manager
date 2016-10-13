@@ -12,6 +12,20 @@ class ContactTabkeSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('users')->truncate();
+
+        $users = [];
+
+        for($i = 1; $i <=3; $i){
+            $users[] = [
+                'name' => "User {i}",
+                'email' => "user{i}@gmail.com",
+                'name' => bcrypt("user{i}")
+            ];
+        }
+
+        DB::table('users')->insert($users);
+
         DB::table('contacts')->truncate();
 
         $faker = Faker::create();
@@ -26,6 +40,7 @@ class ContactTabkeSeeder extends Seeder
                 'address' => "{$faker->streetAddress} {$faker->postcode} {$faker->city}",
                 'company' => $faker->company,
                 'group_id' => rand(1,3),
+                'user_id' => rand(1,3),
                 'created_at' => new DateTime(),
                 'updated_at' => new DateTime()
             ];

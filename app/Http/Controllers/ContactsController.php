@@ -19,13 +19,20 @@ class ContactsController extends Controller
 
     public function __construct()
     {
+        $this->middleware('auth');
         $this->upload_dir = base_path() . '/' . $this->upload_dir;
     }
 
     public function index(Request $request)
     {
+        \DB::enableQueryLog();
+
+        listGroups($request->user()->id);
+
+        dd(\DB::getQueryLog());
+
         $contacts = Contact::where(function ($query) use ($request) {
-            //$query->where("user_id", $request->user()->id);
+            $query->where("user_id", $request->user()->id);
 
             if ($group_id = ($request->get('group_id'))) {
                 $query->where('group_id', $group_id);
