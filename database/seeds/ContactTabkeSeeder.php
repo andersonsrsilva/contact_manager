@@ -16,11 +16,11 @@ class ContactTabkeSeeder extends Seeder
 
         $users = [];
 
-        for($i = 1; $i <=3; $i){
+        for($i = 1; $i <=3; $i++){
             $users[] = [
-                'name' => "User {i}",
-                'email' => "user{i}@gmail.com",
-                'name' => bcrypt("user{i}")
+                'name' => "User {$i}",
+                'email' => "user{$i}@gmail.com",
+                'name' => bcrypt("user{$i}")
             ];
         }
 
